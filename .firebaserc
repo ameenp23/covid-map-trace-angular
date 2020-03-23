@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "covid-map-trace": {
+      "hosting": {
+        "covid-map-trace-angular": [
+          "covid-map-trace"
+        ]
+      }
+    }
+  }
+}

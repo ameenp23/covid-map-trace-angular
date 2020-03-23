@@ -1,0 +1,19 @@
+{
+  "hosting": [
+    {
+      "target": "covid-map-trace-angular",
+      "public": "dist/covid-map-trace-angular",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ]
+}
