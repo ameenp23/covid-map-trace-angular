@@ -2,8 +2,11 @@
   "targets": {
     "covid-map-trace": {
       "hosting": {
-        "covid-map-trace-angular": [
+        "prod": [
           "covid-map-trace"
+        ],
+        "dev": [
+          "covid-map-trace-test"
         ]
       }
     }
