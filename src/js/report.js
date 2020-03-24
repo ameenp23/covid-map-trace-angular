@@ -3,9 +3,9 @@ $("tbody").on("click",".report", function(){
     var patRef = $(this).data('val1');
     var locRef = $(this).data('val2');
     db.collection("flags").add({
-        name: "srj",
-        address: "cax",
-        contact: 93994,
+        name: $('#name').val(),
+        address: $('#address').val(),
+        contact: $('#contact').val(),
         suspectRef: patRef+"/locations/"+locRef
     });
 });
