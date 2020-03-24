@@ -1,4 +1,7 @@
 {
+  "projects": {
+     "default": "covid-map-trace"
+   },
   "targets": {
     "covid-map-trace": {
       "hosting": {
