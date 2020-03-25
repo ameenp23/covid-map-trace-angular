@@ -6,6 +6,6 @@ $("tbody").on("click",".report", function(){
         name: $('#name').val(),
         address: $('#address').val(),
         contact: $('#contact').val(),
-        suspectRef: patRef+"/locations/"+locRef
+        suspectRef: db.doc(patRef+"/locations/"+locRef)
     });
 });
