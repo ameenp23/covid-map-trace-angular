@@ -12,32 +12,30 @@ import { AppService } from '../app.service';
 })
 export class TraceComponent implements OnInit {
 
-  locations: {}[];
-  file:any;
-  fileChanged(e) {
-      this.file = e.target.files[0];
-  }
+  userLocationHistory: any = null;
+  locations: any;
+  suspected=[];
 
   constructor(public dialog: MatDialog, private appService: AppService) {}  
 
   ngOnInit(): void {
-    this.appService.getLocations().subscribe(locations => {
+    this.appService.getLocations().subscribe((locations:any) => {
       this.locations=locations;
     })
   }
-  
-  ELEMENT_DATA = [
-    {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-    {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-    {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-    {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-    {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
 
-  ];
-
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'select'];
-  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  displayedColumns: string[] = ['date', 'loc', 'time', 'ploc', 'ptime', 'select'];
+  dataSource = new MatTableDataSource();
   selection = new SelectionModel(true, []);
+
+  upload(e) {
+    let file = e.target.files[0];
+    const fileReader = new FileReader();
+    fileReader.readAsText(file, "UTF-8");
+    fileReader.onload = () => {
+      this.userLocationHistory=JSON.parse(fileReader.result as string).timelineObjects;
+    }
+}
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -60,12 +58,90 @@ export class TraceComponent implements OnInit {
   }
 
   trace() {
-    let fileReader = new FileReader();
-    fileReader.onload = (e) => {
-      console.log(fileReader.result);
-    }
-    fileReader.readAsText(this.file);
+    let patientRef,lat2,lon2,ploc,p_tstamp,month,date,p_hr,p_min,pstart,p_shr,p_smin,pend,p_ehr,p_emin;
+
+    this.locations.forEach((patientLocation)=>{
+      patientRef = patientLocation.patientRef.path
+      lat2 = patientLocation.geopoint.F;
+      lon2 = patientLocation.geopoint.V;
+      ploc = patientLocation.location;
+      if(patientLocation.hasOwnProperty("DT")){
+          p_tstamp = patientLocation.DT.seconds * Math.pow(10,3);
+          let i = new Date(Number(p_tstamp));
+          month = i.getMonth()+1;
+          date = i.getDate();
+          p_hr = i.getHours();
+          p_min = i.getMinutes();
+      }
+      else {
+          pstart = patientLocation.duration.startt.seconds * Math.pow(10,3);
+          let i =new Date(Number(pstart));
+          month = i.getMonth()+1;
+          date = i.getDate();
+          p_shr = i.getHours();
+          p_smin = i.getMinutes();
+          pend = patientLocation.duration.endt.seconds * Math.pow(10,3);
+          i =new Date(Number(pend));
+          p_ehr = i.getHours();
+          p_emin = i.getMinutes();
+      }
+      this.userLocationHistory.forEach((userLocation)=>{
+        if(userLocation.hasOwnProperty("placeVisit")) {
+          let lat1 = userLocation.placeVisit.location.latitudeE7/Math.pow(10,7);
+          let lon1 = userLocation.placeVisit.location.longitudeE7/Math.pow(10,7);
+          let startt = userLocation.placeVisit.duration.startTimestampMs;
+          let endt = userLocation.placeVisit.duration.endTimestampMs;
+          let uloc = userLocation.placeVisit.location.address;
+          let d1 = new Date(Number(startt));
+          let ushour = d1.getHours();
+          let usmin = d1.getMinutes();
+          let d2 = new Date(Number(endt));
+          let uehour = d2.getHours();
+          let uemin = d2.getMinutes();
+
+          if (this.find(lat1,lon1,lat2,lon2)<2){
+            if(p_tstamp){    
+                if((startt < p_tstamp) && (p_tstamp < endt)){
+                  let suspect:any = {};
+                  suspect.date = month+"/"+date;
+                  suspect.loc = uloc;
+                  suspect.time = ushour+":"+usmin+" to "+uehour+":"+uemin;
+                  suspect.ploc =  ploc;
+                  suspect.ptime =  p_hr+":"+p_min;
+                  this.suspected.push(suspect);
+                }
+            }
+            else{
+                if(pstart < endt && pend > startt){
+                  let suspect:any = {};
+                  suspect.date = month+"/"+date;
+                  suspect.loc = uloc;
+                  suspect.time = ushour+":"+usmin+" to "+uehour+":"+uemin;
+                  suspect.ploc =  ploc;
+                  suspect.ptime = p_shr+":"+p_smin+" to "+p_ehr+":"+p_emin;
+                  this.suspected.push(suspect);
+                }
+            }
+          }
+        }
+      });
+    });
+    this.dataSource.data=this.suspected;
   }
+
+  find(lat1_deg, lon1_deg, lat2_deg, long2_deg){
+    const deg2rad = Math.PI / 180;
+    const EARTH_RADIUS_KM = 6371.01;
+    let lat1 = lat1_deg*deg2rad;
+    let long1 = lon1_deg*deg2rad;
+    let lat2 = lat2_deg*deg2rad;
+    let long2 = long2_deg*deg2rad;
+
+    return Math.acos(
+        (Math.sin(lat1)*Math.sin(lat2))+
+        (Math.cos(lat1)*Math.cos(lat2)*Math.cos(long1-long2))
+    )*EARTH_RADIUS_KM;
+  };
 
   report(): void {
     const dialogRef = this.dialog.open(ReportDialogueComponent, {
