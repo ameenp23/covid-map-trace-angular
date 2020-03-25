@@ -1,0 +1,48 @@
+<html>
+    <title>Add Patient</title>
+    <head>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+            <!-- <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+<link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" /> -->
+    </head>
+    <body>
+        <!-- <form id='pat-data'> -->
+        Name:<input type="text" id='name'>
+        Hospital:<input type="text" id='hosp'>
+        Patient ID:<input type="text" id='id'>
+        Parent ID:<input type="text" id='p-id'>
+        <input type="submit" value="add patient" id='add_patient'>
+        <!-- </form> -->
+    <div>
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Duration(optional)</th>
+              <th>Location</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="table-body">
+          </tbody>
+          <tfoot>
+                <tr>
+                  <td>Date<input type="datetime-local" id='dt'></td>
+                  <td><input type="checkbox" id='e'><input type="datetime-local" id='etime'></td>
+                  <td>Location<input type="text" id='loc'></td>
+                  <td>Map?<input type="hidden" id='geopoint' data-lat='11.3205531' data-lon='75.9305661'></td>  
+                </tr>
+        </tfoot>
+        </table><span><button id='add_loc'>Add</button></span>
+      </div>
+
+    <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-app.js"></script>
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-firestore.js"></script>
+    <script src="js/firebase.js"></script>
+    <script src="js/add-patient.js"></script>
+    <script src="js/load-loc.js"></script>
+
+</body>
+</html>
