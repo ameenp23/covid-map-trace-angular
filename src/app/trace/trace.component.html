@@ -1,0 +1,63 @@
+<div class="content" role="main">
+    <p class="info">Upload Google Maps location history JSON to start tracing.</p>
+    <label class="custom-file-upload">
+      <input type="file" id="myfile" (change)="upload($event)"/>
+      UPLOAD JSON
+    </label>
+    <p *ngIf="userLocationHistory">File uploaded successfully!</p>
+    <span *ngIf="!userLocationHistory" class="spacer"></span>
+    <button mat-raised-button color="accent" [disabled]=!userLocationHistory (click)="trace()">TRACE ME</button>
+    <span class="spacer"></span>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Date</th>
+          <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="loc">
+          <th mat-header-cell *matHeaderCellDef>Location</th>
+          <td mat-cell *matCellDef="let element"> {{element.loc}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef>Time </th>
+          <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="ploc">
+          <th mat-header-cell *matHeaderCellDef>P.Location</th>
+          <td mat-cell *matCellDef="let element"> {{element.ploc}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="ptime">
+          <th mat-header-cell *matHeaderCellDef>P.Time</th>
+          <td mat-cell *matCellDef="let element"> {{element.ptime}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+              <mat-checkbox (change)="$event ? masterToggle() : null"
+                            [checked]="selection.hasValue() && isAllSelected()"
+                            [indeterminate]="selection.hasValue() && !isAllSelected()"
+                            [aria-label]="checkboxLabel()">
+              </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-checkbox (click)="$event.stopPropagation()"
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)"
+                            [aria-label]="checkboxLabel(row)">
+              </mat-checkbox>
+            </td>
+          </ng-container>
+      
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <span class="spacer"></span>
+      <button mat-raised-button color="warn" (click)="report()">REPORT</button>
+      
+</div>
