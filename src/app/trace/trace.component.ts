@@ -15,6 +15,7 @@ export class TraceComponent implements OnInit {
   userLocationHistory: any = null;
   locations: any;
   suspected=[];
+  displayMessage = false;
 
   constructor(public dialog: MatDialog, private appService: AppService) {}  
 
@@ -57,33 +58,41 @@ export class TraceComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  trace() {
-    let patientRef,lat2,lon2,ploc,p_tstamp,month,date,p_hr,p_min,pstart,p_shr,p_smin,pend,p_ehr,p_emin;
+  showMessage() {
+    if(this.displayMessage){
+      return this.dataSource.data.length>0? "You were in contact with the following patients. Report and seek medical help immediately!" 
+      : "You were NOT in contact with any patients. Stay Home! Stay Safe!"
+    }
+  }
 
+  trace() {
+    let patientDetails:any ={};
     this.locations.forEach((patientLocation)=>{
-      patientRef = patientLocation.patientRef.path
-      lat2 = patientLocation.geopoint.F;
-      lon2 = patientLocation.geopoint.V;
-      ploc = patientLocation.location;
+      patientDetails={};
+      patientDetails.locationId = patientLocation.id;
+      patientDetails.patientRef = patientLocation.patientRef.path
+      patientDetails.lat2 = patientLocation.geopoint.F;
+      patientDetails.lon2 = patientLocation.geopoint.V;
+      patientDetails.ploc = patientLocation.location;
       if(patientLocation.hasOwnProperty("DT")){
-          p_tstamp = patientLocation.DT.seconds * Math.pow(10,3);
-          let i = new Date(Number(p_tstamp));
-          month = i.getMonth()+1;
-          date = i.getDate();
-          p_hr = i.getHours();
-          p_min = i.getMinutes();
+        patientDetails.p_tstamp = patientLocation.DT.seconds * Math.pow(10,3);
+          let i = new Date(Number(patientDetails.p_tstamp));
+          patientDetails.month = i.getMonth()+1;
+          patientDetails.date = i.getDate();
+          patientDetails.p_hr = i.getHours();
+          patientDetails.p_min = i.getMinutes();
       }
       else {
-          pstart = patientLocation.duration.startt.seconds * Math.pow(10,3);
-          let i =new Date(Number(pstart));
-          month = i.getMonth()+1;
-          date = i.getDate();
-          p_shr = i.getHours();
-          p_smin = i.getMinutes();
-          pend = patientLocation.duration.endt.seconds * Math.pow(10,3);
-          i =new Date(Number(pend));
-          p_ehr = i.getHours();
-          p_emin = i.getMinutes();
+        patientDetails.pstart = patientLocation.duration.startt.seconds * Math.pow(10,3);
+          let i =new Date(Number(patientDetails.pstart));
+          patientDetails.month = i.getMonth()+1;
+          patientDetails.date = i.getDate();
+          patientDetails.p_shr = i.getHours();
+          patientDetails.p_smin = i.getMinutes();
+          patientDetails.pend = patientLocation.duration.endt.seconds * Math.pow(10,3);
+          let j =new Date(Number(patientDetails.pend));
+          patientDetails.p_ehr = j.getHours();
+          patientDetails.p_emin = j.getMinutes();
       }
       this.userLocationHistory.forEach((userLocation)=>{
         if(userLocation.hasOwnProperty("placeVisit")) {
@@ -99,26 +108,30 @@ export class TraceComponent implements OnInit {
           let uehour = d2.getHours();
           let uemin = d2.getMinutes();
 
-          if (this.find(lat1,lon1,lat2,lon2)<2){
-            if(p_tstamp){    
-                if((startt < p_tstamp) && (p_tstamp < endt)){
+          if (this.find(lat1,lon1,patientDetails.lat2,patientDetails.lon2)<2){    
+            if(patientDetails.p_tstamp){
+                if((startt < patientDetails.p_tstamp) && (patientDetails.p_tstamp < endt)){
                   let suspect:any = {};
-                  suspect.date = month+"/"+date;
+                  suspect.date = patientDetails.month+"/"+patientDetails.date;
                   suspect.loc = uloc;
                   suspect.time = ushour+":"+usmin+" to "+uehour+":"+uemin;
-                  suspect.ploc =  ploc;
-                  suspect.ptime =  p_hr+":"+p_min;
+                  suspect.ploc =  patientDetails.ploc;
+                  suspect.ptime =  patientDetails.p_hr+":"+patientDetails.p_min;
+                  suspect.patientId = patientDetails.patientRef;
+                  suspect.locationId = patientDetails.locationId;
                   this.suspected.push(suspect);
                 }
             }
             else{
-                if(pstart < endt && pend > startt){
+                if(patientDetails.pstart < endt && patientDetails.pend > startt){
                   let suspect:any = {};
-                  suspect.date = month+"/"+date;
+                  suspect.date = patientDetails.month+"/"+patientDetails.date;
                   suspect.loc = uloc;
                   suspect.time = ushour+":"+usmin+" to "+uehour+":"+uemin;
-                  suspect.ploc =  ploc;
-                  suspect.ptime = p_shr+":"+p_smin+" to "+p_ehr+":"+p_emin;
+                  suspect.ploc =  patientDetails.ploc;
+                  suspect.ptime = patientDetails.p_shr+":"+patientDetails.p_smin+" to "+patientDetails.p_ehr+":"+patientDetails.p_emin;
+                  suspect.patientId = patientDetails.patientRef;
+                  suspect.locationId = patientDetails.locationId;
                   this.suspected.push(suspect);
                 }
             }
@@ -127,6 +140,7 @@ export class TraceComponent implements OnInit {
       });
     });
     this.dataSource.data=this.suspected;
+    this.displayMessage=true;
   }
 
   find(lat1_deg, lon1_deg, lat2_deg, long2_deg){
@@ -144,9 +158,12 @@ export class TraceComponent implements OnInit {
   };
 
   report(): void {
+    let sources = this.selection.selected.map(x=>({
+      locationRef: '/locations/'+x.locationId,
+      suspectRef: '/'+x.patientId}));
     const dialogRef = this.dialog.open(ReportDialogueComponent, {
       width: '250px',
-      data: {name: 'TEST'}
+      data: {sources: sources}
     });
   }
 

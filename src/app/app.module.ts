@@ -16,6 +16,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { TraceComponent } from './trace/trace.component';
 import { HomeComponent } from './home/home.component';
@@ -41,7 +42,8 @@ import { AppService } from './app.service';
     MatTableModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatInputModule
+    MatInputModule,
+    MatSnackBarModule
   ],
   providers: [AppService, AngularFirestore],
   bootstrap: [AppComponent]

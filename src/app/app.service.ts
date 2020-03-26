@@ -20,4 +20,8 @@ export class AppService {
       }))
     )
   }
+
+  addFlag(flag) {
+    return this.firestore.collection('flags').add(flag);
+  }
 }
