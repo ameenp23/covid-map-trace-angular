@@ -1,5 +1,5 @@
 export const environment = {
-  production: true,
+  production: false,
   firebaseConfig: {
     apiKey: "AIzaSyC07aStcHa1MS0zosefs2CLHJydqukK8YU",
     authDomain: "covid-map-trace.firebaseapp.com",
