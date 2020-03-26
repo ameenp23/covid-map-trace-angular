@@ -11,9 +11,10 @@
   <mat-form-field>
     <mat-label>Address</mat-label>
     <input matInput [(ngModel)]="user.address">
-  </mat-form-field>    
+  </mat-form-field>
+  <p class="error">{{getErrors()}}</p>    
 </div>
 <div mat-dialog-actions class="actions">
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-raised-button color="warn" cdkFocusInitial>Report</button>
+  <button mat-raised-button color="warn" (click)="report()" [disabled]="getErrors()!=''">Report</button>
 </div>
