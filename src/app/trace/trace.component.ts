@@ -12,32 +12,31 @@ import { AppService } from '../app.service';
 })
 export class TraceComponent implements OnInit {
 
-  locations: {}[];
-  file:any;
-  fileChanged(e) {
-      this.file = e.target.files[0];
-  }
+  userLocationHistory: any = null;
+  locations: any;
+  suspected=[];
+  displayMessage = false;
 
   constructor(public dialog: MatDialog, private appService: AppService) {}  
 
   ngOnInit(): void {
-    this.appService.getLocations().subscribe(locations => {
+    this.appService.getLocations().subscribe((locations:any) => {
       this.locations=locations;
     })
   }
-  
-  ELEMENT_DATA = [
-    {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-    {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-    {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-    {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-    {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
 
-  ];
-
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol', 'select'];
-  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  displayedColumns: string[] = ['date', 'loc', 'time', 'ploc', 'ptime', 'select'];
+  dataSource = new MatTableDataSource();
   selection = new SelectionModel(true, []);
+
+  upload(e) {
+    let file = e.target.files[0];
+    const fileReader = new FileReader();
+    fileReader.readAsText(file, "UTF-8");
+    fileReader.onload = () => {
+      this.userLocationHistory=JSON.parse(fileReader.result as string).timelineObjects;
+    }
+}
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;
@@ -59,18 +58,112 @@ export class TraceComponent implements OnInit {
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.position + 1}`;
   }
 
-  trace() {
-    let fileReader = new FileReader();
-    fileReader.onload = (e) => {
-      console.log(fileReader.result);
+  showMessage() {
+    if(this.displayMessage){
+      return this.dataSource.data.length>0? "You were in contact with the following patients. Report and seek medical help immediately!" 
+      : "You were NOT in contact with any patients. Stay Home! Stay Safe!"
     }
-    fileReader.readAsText(this.file);
   }
 
+  trace() {
+    let patientDetails:any ={};
+    this.locations.forEach((patientLocation)=>{
+      patientDetails={};
+      patientDetails.locationId = patientLocation.id;
+      patientDetails.patientRef = patientLocation.patientRef.path
+      patientDetails.lat2 = patientLocation.geopoint.F;
+      patientDetails.lon2 = patientLocation.geopoint.V;
+      patientDetails.ploc = patientLocation.location;
+      if(patientLocation.hasOwnProperty("DT")){
+        patientDetails.p_tstamp = patientLocation.DT.seconds * Math.pow(10,3);
+          let i = new Date(Number(patientDetails.p_tstamp));
+          patientDetails.month = i.getMonth()+1;
+          patientDetails.date = i.getDate();
+          patientDetails.p_hr = i.getHours();
+          patientDetails.p_min = i.getMinutes();
+      }
+      else {
+        patientDetails.pstart = patientLocation.duration.startt.seconds * Math.pow(10,3);
+          let i =new Date(Number(patientDetails.pstart));
+          patientDetails.month = i.getMonth()+1;
+          patientDetails.date = i.getDate();
+          patientDetails.p_shr = i.getHours();
+          patientDetails.p_smin = i.getMinutes();
+          patientDetails.pend = patientLocation.duration.endt.seconds * Math.pow(10,3);
+          let j =new Date(Number(patientDetails.pend));
+          patientDetails.p_ehr = j.getHours();
+          patientDetails.p_emin = j.getMinutes();
+      }
+      this.userLocationHistory.forEach((userLocation)=>{
+        if(userLocation.hasOwnProperty("placeVisit")) {
+          let lat1 = userLocation.placeVisit.location.latitudeE7/Math.pow(10,7);
+          let lon1 = userLocation.placeVisit.location.longitudeE7/Math.pow(10,7);
+          let startt = userLocation.placeVisit.duration.startTimestampMs;
+          let endt = userLocation.placeVisit.duration.endTimestampMs;
+          let uloc = userLocation.placeVisit.location.address;
+          let d1 = new Date(Number(startt));
+          let ushour = d1.getHours();
+          let usmin = d1.getMinutes();
+          let d2 = new Date(Number(endt));
+          let uehour = d2.getHours();
+          let uemin = d2.getMinutes();
+
+          if (this.find(lat1,lon1,patientDetails.lat2,patientDetails.lon2)<2){    
+            if(patientDetails.p_tstamp){
+                if((startt < patientDetails.p_tstamp) && (patientDetails.p_tstamp < endt)){
+                  let suspect:any = {};
+                  suspect.date = patientDetails.month+"/"+patientDetails.date;
+                  suspect.loc = uloc;
+                  suspect.time = ushour+":"+usmin+" to "+uehour+":"+uemin;
+                  suspect.ploc =  patientDetails.ploc;
+                  suspect.ptime =  patientDetails.p_hr+":"+patientDetails.p_min;
+                  suspect.patientId = patientDetails.patientRef;
+                  suspect.locationId = patientDetails.locationId;
+                  this.suspected.push(suspect);
+                }
+            }
+            else{
+                if(patientDetails.pstart < endt && patientDetails.pend > startt){
+                  let suspect:any = {};
+                  suspect.date = patientDetails.month+"/"+patientDetails.date;
+                  suspect.loc = uloc;
+                  suspect.time = ushour+":"+usmin+" to "+uehour+":"+uemin;
+                  suspect.ploc =  patientDetails.ploc;
+                  suspect.ptime = patientDetails.p_shr+":"+patientDetails.p_smin+" to "+patientDetails.p_ehr+":"+patientDetails.p_emin;
+                  suspect.patientId = patientDetails.patientRef;
+                  suspect.locationId = patientDetails.locationId;
+                  this.suspected.push(suspect);
+                }
+            }
+          }
+        }
+      });
+    });
+    this.dataSource.data=this.suspected;
+    this.displayMessage=true;
+  }
+
+  find(lat1_deg, lon1_deg, lat2_deg, long2_deg){
+    const deg2rad = Math.PI / 180;
+    const EARTH_RADIUS_KM = 6371.01;
+    let lat1 = lat1_deg*deg2rad;
+    let long1 = lon1_deg*deg2rad;
+    let lat2 = lat2_deg*deg2rad;
+    let long2 = long2_deg*deg2rad;
+
+    return Math.acos(
+        (Math.sin(lat1)*Math.sin(lat2))+
+        (Math.cos(lat1)*Math.cos(lat2)*Math.cos(long1-long2))
+    )*EARTH_RADIUS_KM;
+  };
+
   report(): void {
+    let sources = this.selection.selected.map(x=>({
+      locationRef: '/locations/'+x.locationId,
+      suspectRef: '/'+x.patientId}));
     const dialogRef = this.dialog.open(ReportDialogueComponent, {
       width: '250px',
-      data: {name: 'TEST'}
+      data: {sources: sources}
     });
   }
 
