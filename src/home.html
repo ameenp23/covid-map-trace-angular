@@ -1,0 +1,48 @@
+<html>
+    <title>Covid trace Home</title>
+    <head>
+        <!-- <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest-maps.js"></script> -->
+        <!-- <script src="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest.js"></script> -->
+        <!-- <link type="text/css" rel="stylesheet" href="https://api.mqcdn.com/sdk/mapquest-js/v1.3.2/mapquest-maps.css"/> -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    </head>
+    <body style="border: 0; margin: 0;">
+            <div id="map" style="width: 50%; height: 530px;">
+            Address<input type="text" id='address'><br><br>
+            From<input type="datetime-local" id='DT'><br><br>
+            <input type="checkbox" id='dur'><span>Upto(optional)<input type="datetime-local" id="endt"></span><br><br>
+            <button id='geocode'>Locate</button>
+            </div>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Patient Location</th>  
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                </tbody>
+            </table>
+                <!-- Firebase App (the core Firebase SDK) is always required and must be listed first --> 
+    <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-app.js"></script>
+
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-firestore.js"></script>
+            <script src="js/firebase.js"></script>
+            <script src="js/geodist.js"></script>
+            <script src="js/ping.js"></script>
+            <!-- <script>
+                    L.mapquest.key = 'zTJGcEgpfxjWCeNQHtYpkQ0Lr2tkIDCA';
+        
+                    // 'map' refers to a <div> element with the ID map
+                    L.mapquest.map('map', {
+                        center: [10.224742, 76.0202522],
+                        layers: L.mapquest.tileLayer('map'),
+                            zoom: 7
+                    });
+                    map.addControl(L.mapquest.control());
+            </script> -->
+    </body>
+</html>
