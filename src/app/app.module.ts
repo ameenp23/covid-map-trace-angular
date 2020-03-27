@@ -11,6 +11,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -22,13 +23,15 @@ import { TraceComponent } from './trace/trace.component';
 import { HomeComponent } from './home/home.component';
 import { ReportDialogueComponent } from './trace/report-dialogue/report-dialogue.component'
 import { AppService } from './app.service';
+import { InstructionsComponent } from './instructions/instructions.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TraceComponent,
     HomeComponent,
-    ReportDialogueComponent
+    ReportDialogueComponent,
+    InstructionsComponent
   ],
   imports: [
     BrowserModule,
