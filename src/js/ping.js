@@ -10,16 +10,13 @@ $('#geocode').click(function (){
             console.log(JSON.parse(xmlHttp.responseText));
             console.log(JSON.parse(xmlHttp.responseText).results[0].locations[0].latLng);
             geopoint = JSON.parse(xmlHttp.responseText).results[0].locations[0].latLng;
-        }
-    }
-    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
-    xmlHttp.send(null);
-    //Area were coordinates are fetched of given address is over here
 
-    var ustartt = $('#DT');
+            var lat1 = geopoint.lat;
+            var lon1 = geopoint.lng;        
+    var ustartt = $('#DT').val();
     var us_date = new Date(ustartt); 
     var us_ts = us_date.getTime();
-
+    
     var dur = $('#dur').attr('checked');
     if(dur){
         uendt = $('#endt').val();
@@ -67,25 +64,25 @@ $('#geocode').click(function (){
                 var pe_ts = doc.data().duration.endt.seconds*Math.pow(10,3);
             }
 
-            console.log(geopoint);
-            var lat1 = geopoint.lat;
-            var lon1 = geopoint.lng;
-
+            // console.log(patientRef);
+            var docRef = doc.id;
             if(find(lat1,lon1,lat2,lon2)<10){
                 if(dur){
                     if(!pdur){
-                        if(us_ts < ps_ts < ue_ts){
+                        if((us_ts < ps_ts)&& (ps_ts < ue_ts)){
+                            console.log("1:"+doc.id + "timestamp (us,ue,ps)"+us_ts+" : "+ue_ts+" : "+ps_ts);
                             $('#table-body').append("<tr>"+
-                                    "<td>"+ps_month+"/"+ps_date+"/"+ps_year+"</td>"+
+                                    "<td>"+ps_date+"/"+ps_month+"/"+ps_year+"</td>"+
                                     "<td>"+ps_hr+":"+ps_min+"</td>"+
                                     "<td>"+ploc+"</td>"+
                                   "</tr>")
                         }
                     }
                     else{
-                        if(us_ts < pe_ts && ue_ts > ps_ts){
+                        if((us_ts < pe_ts) && (ue_ts > ps_ts)){
+                            console.log("2:"+doc.id+"timestamp (us,ue,ps,pe)"+us_ts+" : "+ue_ts+" : "+ps_ts+" : "+pe_ts);
                             $('#table-body').append("<tr>"+
-                                    "<td>"+ps_month+"/"+ps_date+"/"+ps_year+"</td>"+
+                                    "<td>"+ps_date+"/"+ps_month+"/"+ps_year+"</td>"+
                                     "<td>"+ps_hr+":"+ps_min+" to "+pe_hr+":"+pe_min+"</td>"+
                                     "<td>"+ploc+"</td>"+
                                   "</tr>")
@@ -95,17 +92,19 @@ $('#geocode').click(function (){
                 else{
                     if(!pdur){
                         if(Math.abs(us_ts - ps_ts) < 3600000){
+                            console.log("3:"+doc.id+"timestamp (us,ps)"+us_ts+" : "+ps_ts);
                             $('#table-body').append("<tr>"+
-                                    "<td>"+ps_month+"/"+ps_date+"/"+ps_year+"</td>"+
+                                    "<td>"+ps_date+"/"+ps_month+"/"+ps_year+"</td>"+
                                     "<td>"+ps_hr+":"+ps_min+"</td>"+
                                     "<td>"+ploc+"</td>"+
                                   "</tr>")
                         }
                     }
                     else{
-                        if(ps_ts < us_ts < pe_ts){
+                        if((ps_ts < us_ts ) && (us_ts < pe_ts)){
+                            console.log("4:"+doc.id+"timestamp (us,ps,pe)"+us_ts+" : "+ps_ts+" : "+pe_ts);
                             $('#table-body').append("<tr>"+
-                                    "<td>"+ps_month+"/"+ps_date+"/"+ps_year+"</td>"+
+                                    "<td>"+ps_date+"/"+ps_month+"/"+ps_year+"</td>"+
                                     "<td>"+ps_hr+":"+ps_min+" to "+pe_hr+":"+pe_min+"</td>"+
                                     "<td>"+ploc+"</td>"+
                                   "</tr>")
@@ -115,4 +114,10 @@ $('#geocode').click(function (){
             }
         });
     });
+
+}
+}
+xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+xmlHttp.send(null);
+//Area were coordinates are fetched of given address is over here
 });
