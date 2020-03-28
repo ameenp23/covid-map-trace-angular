@@ -14,7 +14,10 @@ export class AppComponent {
   }
 
   closeMenu(){
-    document.getElementById('list').style.maxHeight='0';
-    this.menu.checked=false;
+    if(window.screen.width<1000)
+      {
+        document.getElementById('list').style.maxHeight='0';
+        this.menu.checked=false;
+      }
   }
 }
