@@ -13,7 +13,8 @@ const routes: Routes = [
   { path: 'trace', component: TraceComponent},
   { path: 'privacy', component: PrivacyComponent},
   { path: 'contact', component: ContactComponent},
-  { path: 'admin', component: AdminComponent }
+  { path: 'admin', component: AdminComponent },
+  { path: '**', redirectTo: '/home'},
 ];
 
 @NgModule({
