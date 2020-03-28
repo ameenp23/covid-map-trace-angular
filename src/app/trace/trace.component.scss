@@ -6,8 +6,18 @@
     flex-direction: column;
     align-items: center;
 
+    .mat-raised-button {
+        text-transform: uppercase;
+        font-family: 'Montserrat';
+        border-radius: 8px;
+    }
     p {
         text-align: center;
+    }
+    .main-actions {
+        display: flex;
+        width: 100%;
+        justify-content: space-evenly;
     }
     .info {
         font-weight: 600;
@@ -23,11 +33,18 @@
     .custom-file-upload {
     font-weight: 600;
     display: inline-block;
-    padding: 8px 16px;
+    padding: 9px 16px;
     cursor: pointer;
     border-radius: 8px;
-    background-color: darkviolet;
+    background-color: #3f51b5;
     color: white;
+    }
+
+    .enter-details {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        width: 100%;
     }
 
     .spacer {
