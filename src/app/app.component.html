@@ -5,13 +5,13 @@
 <header class="header">
   <a href="" class="logo">COVID MAP TRACE</a>
   <input class="menu-btn" type="checkbox" id="menu-btn" />
-  <label class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
-  <ul class="menu">
-    <li><a routerLink="home">HOME</a></li>
-    <li><a routerLink="trace">TRACE</a></li>
-    <li><a routerLink="privacy">PRIVACY</a></li>
-    <li><a routerLink="contact">CONTACT US</a></li>
-    <li><a routerLink="admin">ADMIN</a></li>
+  <label (click)="openMenu()" class="menu-icon" for="menu-btn"><span class="navicon"></span></label>
+  <ul class="menu" id="list">
+    <li (click)="closeMenu()"><a routerLink="home">HOME</a></li>
+    <li (click)="closeMenu()"><a routerLink="trace">TRACE</a></li>
+    <li (click)="closeMenu()"><a routerLink="privacy">PRIVACY</a></li>
+    <li (click)="closeMenu()"><a routerLink="contact">CONTACT US</a></li>
+    <li (click)="closeMenu()"><a routerLink="admin">ADMIN</a></li>
   </ul>
 </header>
 

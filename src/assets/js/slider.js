@@ -1,4 +1,4 @@
-var slideIndex = 1;
+/* var slideIndex = 1;
     showSlides(slideIndex);
     
     function plusSlides(n) {
@@ -23,4 +23,4 @@ var slideIndex = 1;
       }
       if(slides[slideIndex-1])slides[slideIndex-1].style.display = "block";  
       if(dots[slideIndex-1])dots[slideIndex-1].className += " active";
-    }
+    } */
