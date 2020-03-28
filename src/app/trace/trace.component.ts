@@ -129,7 +129,8 @@ export class TraceComponent implements OnInit {
       this.user.lat1 = latLon.lat;
       this.user.lon1 = latLon.lng;
       this.locations.forEach((patientDetails) => {
-        if (this.find(this.user.lat1, this.user.lon1, patientDetails.lat2, patientDetails.lon2) < 10) {
+        if (this.find(this.user.lat1, this.user.lon1, patientDetails.lat2, patientDetails.lon2) < 10 && this.user.startT<patientDetails.pend && 
+            this.user.endT>patientDetails.pstart) {
           let suspect: any = {};
           suspect.date = patientDetails.month + "/" + patientDetails.date;
           suspect.loc = this.user.place;
