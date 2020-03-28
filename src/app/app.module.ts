@@ -26,6 +26,8 @@ import { ReportDialogueComponent } from './trace/report-dialogue/report-dialogue
 import { AppService } from './app.service';
 import { InstructionsComponent } from './instructions/instructions.component';
 import { AdminComponent } from './admin/admin.component';
+import { PrivacyComponent } from './privacy/privacy.component';
+import { ContactComponent } from './contact/contact.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { AdminComponent } from './admin/admin.component';
     HomeComponent,
     ReportDialogueComponent,
     InstructionsComponent,
-    AdminComponent
+    AdminComponent,
+    PrivacyComponent,
+    ContactComponent
   ],
   imports: [
     BrowserModule,
