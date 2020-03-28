@@ -20,7 +20,7 @@ export class TraceComponent implements OnInit {
   displayMessage = false;
   details = 'uploaded';
   user: any = { place: '', startTime: '', endTime: '' };
-  mapUrl = 'http://www.mapquestapi.com/geocoding/v1/address?key=zTJGcEgpfxjWCeNQHtYpkQ0Lr2tkIDCA&location=';
+  mapUrl = 'https://www.mapquestapi.com/geocoding/v1/address?key=zTJGcEgpfxjWCeNQHtYpkQ0Lr2tkIDCA&location=';
 
   constructor(public dialog: MatDialog, private appService: AppService, private http: HttpClient,private spinner: NgxSpinnerService) { }
 
