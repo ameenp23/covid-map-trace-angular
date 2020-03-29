@@ -33,6 +33,7 @@ import { AdminComponent } from './admin/admin.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { ContactComponent } from './contact/contact.component';
 import { SigninFormComponent } from './admin/signin-form/signin-form.component';
+import { AddpatientFormComponent } from './admin/addpatient-form/addpatient-form.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { SigninFormComponent } from './admin/signin-form/signin-form.component';
     AdminComponent,
     PrivacyComponent,
     ContactComponent,
-    SigninFormComponent
+    SigninFormComponent,
+    AddpatientFormComponent
   ],
   imports: [
     BrowserModule,
