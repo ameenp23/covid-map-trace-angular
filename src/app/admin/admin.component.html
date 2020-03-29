@@ -1,43 +1,17 @@
 <div class="content">
   <div *ngIf="authService.isLoggedIn; else showSignin" align="center">
     <p *ngIf="currentUser">Hello {{ currentUser.email }}!</p>
-    <p>'Add patient' form to be added</p>
+    <app-addpatient-form></app-addpatient-form><br/>
     <mat-card-actions>
       <div>
-        <button mat-button (click)="signOut()">Sign out</button>
+        <button mat-stroked-button (click)="signOut()">Sign out</button>
       </div>
     </mat-card-actions>
   </div>
   <ng-template #showSignin>
     <div align="center">
       <p>Sign in to add new patients</p>
-      <mat-card class="signin-card">
-        <form class="signin-form">
-          <mat-form-field class="full-width">
-            <mat-label>Email</mat-label>
-            <input matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com" #userEmail>
-            <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-              Please enter a valid email address
-            </mat-error>
-            <mat-error *ngIf="emailFormControl.hasError('required')">
-              Email is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field class="full-width">
-            <mat-label>Password</mat-label>
-            <input matInput type="password" [formControl]="passwordFormControl" placeholder="******" #userPassword> 
-            <mat-error *ngIf="passwordFormControl.hasError('required')">
-              Password is <strong>required</strong>
-            </mat-error>
-          </mat-form-field>
-        </form>
-        <mat-card-actions>
-          <div>
-            <button mat-button (click)="signIn(userEmail.value, userPassword.value)">Sign In</button>
-          </div>
-        </mat-card-actions>
-      </mat-card>
+      <app-signin-form></app-signin-form>
     </div>
   </ng-template>
 </div>

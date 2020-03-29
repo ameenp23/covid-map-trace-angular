@@ -32,6 +32,8 @@ import { InstructionsComponent } from './instructions/instructions.component';
 import { AdminComponent } from './admin/admin.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { ContactComponent } from './contact/contact.component';
+import { SigninFormComponent } from './admin/signin-form/signin-form.component';
+import { AddpatientFormComponent } from './admin/addpatient-form/addpatient-form.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { ContactComponent } from './contact/contact.component';
     InstructionsComponent,
     AdminComponent,
     PrivacyComponent,
-    ContactComponent
+    ContactComponent,
+    SigninFormComponent,
+    AddpatientFormComponent
   ],
   imports: [
     BrowserModule,
