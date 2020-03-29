@@ -9,6 +9,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxSpinnerModule } from "ngx-spinner";
 
 import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from "@angular/fire/auth";
 import { AngularFireDatabaseModule } from '@angular/fire/database';
 import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
@@ -26,6 +27,7 @@ import { TraceComponent } from './trace/trace.component';
 import { HomeComponent } from './home/home.component';
 import { ReportDialogueComponent } from './trace/report-dialogue/report-dialogue.component'
 import { AppService } from './app.service';
+import { AuthService } from "./services/auth.service";
 import { InstructionsComponent } from './instructions/instructions.component';
 import { AdminComponent } from './admin/admin.component';
 import { PrivacyComponent } from './privacy/privacy.component';
@@ -53,6 +55,7 @@ import { ContactComponent } from './contact/contact.component';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFirestoreModule,
     AngularFireDatabaseModule,
+    AngularFireAuthModule,
     MatButtonModule,
     MatTableModule,
     MatCheckboxModule,
@@ -61,7 +64,7 @@ import { ContactComponent } from './contact/contact.component';
     MatSnackBarModule,
     MatCardModule
   ],
-  providers: [AppService, AngularFirestore],
+  providers: [AppService, AngularFirestore, AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
