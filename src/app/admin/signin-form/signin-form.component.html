@@ -1,6 +1,6 @@
 <mat-card class="signin-card">
   <form class="signin-form">
-    <mat-form-field class="full-width">
+    <mat-form-field class="full-width" appearance="fill">
       <mat-label>Email</mat-label>
       <input matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com" #userEmail>
       <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
@@ -11,9 +11,9 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field class="full-width">
+    <mat-form-field class="full-width" appearance="fill">
       <mat-label>Password</mat-label>
-      <input matInput type="password" [formControl]="passwordFormControl" placeholder="******" #userPassword> 
+      <input matInput [type]="'password'" [formControl]="passwordFormControl" placeholder="******" #userPassword> 
       <mat-error *ngIf="passwordFormControl.hasError('required')">
         Password is <strong>required</strong>
       </mat-error>
