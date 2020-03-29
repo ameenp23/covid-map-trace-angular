@@ -49,6 +49,9 @@ h3 {
    user-select: none;
  }
  
+  .prev {
+    left: 0;
+  }
  /* Position the "next button" to the right */
  .next {
    right: 0;
