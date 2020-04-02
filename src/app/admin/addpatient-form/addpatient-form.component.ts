@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-
-export interface UserLocationData {
-  place: string;
-  startTime: any;
-  endTime: any;
-}
+import { LocationService } from '../../services/location.service';
+import { DatabaseService } from '../../services/database.service';
+import { RouteMapItem } from '../../interfaces/route-map-item';
+import { LatLong } from '../../interfaces/lat-long';
 
 @Component({
   selector: 'app-addpatient-form',
@@ -13,41 +11,67 @@ export interface UserLocationData {
   styleUrls: ['./addpatient-form.component.css']
 })
 export class AddpatientFormComponent implements OnInit {
-  locations: UserLocationData[] = [];
-  displayedColumns: string[] = ['place', 'startTime', 'endTime'];
+  name: string = '';
+  address: string = '';
+  routeMap: RouteMapItem[] = [];
+  displayedColumns: string[] = ['location', 'startTime', 'endTime'];
   dataSource = new MatTableDataSource();
   currentInput = {
-    place: null,
+    location: null,
     startTime: null,
     endTime: null
-  };
+  }
+  xmlHttp = new XMLHttpRequest();
 
-  ItemsArray= [];
-
-  constructor() { }
+  constructor(
+    private locationService: LocationService,
+    private dbService: DatabaseService) { }
 
   ngOnInit(): void {
-    this.dataSource.data = this.locations;
+    this.dataSource.data = this.routeMap;
   }
 
   saveCurrentInput() {
     console.log(this.currentInput);
-    this.locations.push(this.currentInput);
-    this.ItemsArray.push(this.currentInput);
-    this.dataSource.data = this.locations;
-    this.currentInput = {
-      place: null,
-      startTime: null,
-      endTime: null
-    }
+    this.locationService.getLatLong(this.currentInput.location)
+      .subscribe(responseJSON => {
+        console.log(responseJSON);
+        var latLong = responseJSON.results[0].locations[0].latLng;
+        console.log(latLong);
+        this.routeMap.push({
+          ...this.currentInput,
+          latitude: latLong.lat, 
+          longitude: latLong.lng
+        });
+        this.dataSource.data = this.routeMap;
+        this.currentInput = {
+          location: null,
+          startTime: null,
+          endTime: null,
+        }
+      });
   }
 
   submit() {
-    window.alert("This feature is not implemented yet");
+    console.log("submitting");
+    console.log({
+      name: this.name,
+      address: this.address,
+      routeMap: this.routeMap
+    });
+    this.dbService.addPatient({
+      name: this.name,
+      address: this.address,
+      routeMap: this.routeMap
+    });
   }
 
   clear() {
     this.dataSource.data = [];
-    this.locations = [];
+    this.routeMap = [];
+  }
+
+  getLatLong(address: string): any {  
+    
   }
 }
