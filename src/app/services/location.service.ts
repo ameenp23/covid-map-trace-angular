@@ -7,7 +7,7 @@ export interface LatLong {
   longitude: number
 }
 
-const geocodingUrl = "http://www.mapquestapi.com/geocoding/v1/address?key=zTJGcEgpfxjWCeNQHtYpkQ0Lr2tkIDCA&location=";
+const geocodingUrl = "https://www.mapquestapi.com/geocoding/v1/address?key=zTJGcEgpfxjWCeNQHtYpkQ0Lr2tkIDCA&location=";
 
 @Injectable({
   providedIn: 'root'
