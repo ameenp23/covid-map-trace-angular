@@ -10,7 +10,7 @@
         Name:<input type="text" id='name'>
         Hospital:<input type="text" id='hosp'>
         Patient ID:<input type="text" id='id'>
-        Parent ID:<input type="text" id='p-id'>
+        Source ID:<input type="text" id='p-id'>
         <input type="submit" value="add patient" id='add_patient'>
         <!-- </form> -->
     <div>
@@ -19,7 +19,8 @@
             <tr>
               <th>Date</th>
               <th>Duration(optional)</th>
-              <th>Location</th>
+              <th>District</th>
+              <th>Address</th>
               <th></th>
             </tr>
           </thead>
@@ -29,19 +30,37 @@
                 <tr>
                   <td>Date<input type="datetime-local" id='dt'></td>
                   <td><input type="checkbox" id='e'><input type="datetime-local" id='etime'></td>
-                  <td>Location<input type="text" id='loc'></td>
-                  <td>Map?<input type="hidden" id='geopoint' data-lat='11.3205531' data-lon='75.9305661'></td>  
+                  <td>District<input type="text" id='dist'></td>
+                  <td>Location<input type="text" id='loc' list="locations">
+                    <datalist id='locations'>
+                    </datalist>
+                    </td>
+                  <td>Coordinates<input type="number" id='lat'>,<input type="number" id='lon'></td>  
                 </tr>
         </tfoot>
         </table><span><button id='add_loc'>Add</button></span>
       </div>
-
+<button id='see'>See</button>
     <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-app.js"></script>
     <!-- Add Firebase products that you want to use -->
     <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.12.0/firebase-firestore.js"></script>
     <script src="js/firebase.js"></script>
+    <script>
+      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.SESSION)
+        .then(function() {
+          email = "adeebnabdulsalam@gmail.com";
+          password = "firebase";
+          return firebase.auth().signInWithEmailAndPassword(email, password);
+        })
+        .catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+        });
+    </script>
     <script src="js/add-patient.js"></script>
+    <script src="js/add-loc.js"></script>
     <script src="js/load-loc.js"></script>
 
 </body>
