@@ -22,6 +22,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { TraceComponent } from './trace/trace.component';
 import { HomeComponent } from './home/home.component';
@@ -66,6 +67,7 @@ import { AddpatientFormComponent } from './admin/addpatient-form/addpatient-form
     MatDialogModule,
     MatInputModule,
     MatSnackBarModule,
+    MatAutocompleteModule,
     MatCardModule
   ],
   providers: [AppService, AngularFirestore, AuthService],

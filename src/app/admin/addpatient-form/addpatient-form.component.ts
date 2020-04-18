@@ -6,6 +6,8 @@ import { DatabaseService } from '../../services/database.service';
 import { RouteMapItem } from '../../interfaces/route-map-item';
 // import { LatLong } from '../../interfaces/lat-long';
 import { Patient } from '../../interfaces/patient';
+import { of } from 'rxjs';
+import { debounceTime, map } from 'rxjs/operators';
 
 
 @Component({
@@ -24,13 +26,14 @@ export class AddpatientFormComponent implements OnInit {
   displayedColumns: string[] = ['district', 'location', 'startTime', 'endTime', 'latitude', 'longitude'];
   dataSource = new MatTableDataSource();
   currentInput: RouteMapItem = {
-    district: null,
-    location: null,
+    district: '',
+    location: '',
     startTime: null,
     endTime: null,
     latitude: null,
     longitude: null,
   }
+  locationsObs = of([]);
 
   constructor(
     // private locationService: LocationService,
@@ -38,6 +41,7 @@ export class AddpatientFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataSource.data = this.patient.routeMap;
+    this.filterLocations();
   }
 
   saveCurrentInput() {
@@ -82,5 +86,27 @@ export class AddpatientFormComponent implements OnInit {
   clear() {
     this.dataSource.data = [];
     this.patient.routeMap = [];
+  }
+
+  filterLocations() {
+    this.locationsObs = this.dbService.fetchLocations().pipe(
+      debounceTime(300),
+      map((data) => this.performFilter(data))
+    )
+  }
+
+  performFilter(locationsObs) {
+    return locationsObs.filter((x) => {
+      // filter by what prop you want
+      return x.address.toLowerCase().startsWith(this.currentInput.location.trim().toLowerCase())
+    })
+  }
+
+  locationSelected(event) {
+    var locationDetails = event.option.value;
+    console.log(locationDetails);
+    this.currentInput.location = locationDetails.address;
+    this.currentInput.latitude = locationDetails.geopoint.latitude;
+    this.currentInput.longitude = locationDetails.geopoint.longitude;
   }
 }
