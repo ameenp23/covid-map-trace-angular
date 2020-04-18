@@ -56,7 +56,12 @@
   </mat-form-field><br/>
   <mat-form-field appearance="fill">
     <mat-label>Place/Location*</mat-label>
-    <input matInput [(ngModel)]="currentInput.location">
+    <input matInput [matAutocomplete]="auto" (input)="filterLocations()" [(ngModel)]="currentInput.location">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="locationSelected($event)">
+      <mat-option *ngFor="let location of locationsObs | async" [value]="location">
+        <span>{{ location.address }}</span>
+      </mat-option>
+    </mat-autocomplete>
   </mat-form-field><br/>
   <mat-form-field appearance="fill">
     <mat-label>From time*</mat-label>
