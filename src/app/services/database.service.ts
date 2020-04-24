@@ -27,8 +27,7 @@ export class DatabaseService {
     return this.firestore.collection('patients').add(patientDetails)
       .then((ref) => {
         console.log(`Added patient with id=${ref.id}`)
-        var routeMapItem: RouteMapItem;
-        for(routeMapItem of patient.routeMap) {
+        for(let routeMapItem of patient.routeMap) {
           this.firestore.collection('patients').doc(ref.id).collection('routeMap').add({
             district: routeMapItem.district,
             location: routeMapItem.location,
