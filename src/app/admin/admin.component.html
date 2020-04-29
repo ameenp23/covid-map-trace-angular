@@ -1,0 +1,17 @@
+<div class="content">
+  <div *ngIf="authService.isLoggedIn; else showSignin" align="center">
+    <p *ngIf="currentUser">Hello {{ currentUser.email }}!</p>
+    <app-addpatient-form></app-addpatient-form><br/>
+    <mat-card-actions>
+      <div>
+        <button mat-stroked-button (click)="signOut()">Sign out</button>
+      </div>
+    </mat-card-actions>
+  </div>
+  <ng-template #showSignin>
+    <div align="center">
+      <p>Sign in to add new patients</p>
+      <app-signin-form></app-signin-form>
+    </div>
+  </ng-template>
+</div>

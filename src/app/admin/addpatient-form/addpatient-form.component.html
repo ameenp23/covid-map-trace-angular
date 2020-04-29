@@ -1,0 +1,87 @@
+<div class="container">
+  <form class="addpatient-form">
+    <mat-form-field appearance="fill">
+      <mat-label>Name</mat-label>
+      <input matInput [(ngModel)]="patient.name" [ngModelOptions]="{standalone: true}">
+    </mat-form-field><br/>
+    <mat-form-field appearance="fill">
+      <mat-label>Hospital</mat-label>
+      <input matInput [(ngModel)]="patient.hospital" [ngModelOptions]="{standalone: true}">
+    </mat-form-field><br/>
+    <mat-form-field appearance="fill">
+      <mat-label>Patient ID</mat-label>
+      <input matInput [(ngModel)]="patient.pid" [ngModelOptions]="{standalone: true}">
+    </mat-form-field><br/>
+    <mat-form-field appearance="fill">
+      <mat-label>Source ID</mat-label>
+      <input matInput [(ngModel)]="patient.src_id" [ngModelOptions]="{standalone: true}">
+    </mat-form-field><br/>
+  </form>
+  <p>Route Map</p>
+  <br/>
+  <div *ngIf="dataSource.data.length>0">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="district">
+        <th mat-header-cell *matHeaderCellDef> District </th>
+        <td mat-cell *matCellDef="let element"> {{element.district}} </td>
+      </ng-container>
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef> Location </th>
+        <td mat-cell *matCellDef="let element"> {{element.location}} </td>
+      </ng-container>
+      <ng-container matColumnDef="startTime">
+        <th mat-header-cell *matHeaderCellDef> fromTime </th>
+        <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
+      </ng-container>
+      <ng-container matColumnDef="endTime">
+        <th mat-header-cell *matHeaderCellDef> uptoTime </th>
+        <td mat-cell *matCellDef="let element"> {{element.endTime}} </td>
+      </ng-container>
+      <ng-container matColumnDef="latitude">
+        <th mat-header-cell *matHeaderCellDef> Latitude </th>
+        <td mat-cell *matCellDef="let element"> {{element.latitude}} </td>
+      </ng-container>
+      <ng-container matColumnDef="longitude">
+        <th mat-header-cell *matHeaderCellDef> Longitude </th>
+        <td mat-cell *matCellDef="let element"> {{element.longitude}} </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+  <br/>
+  <mat-form-field appearance="fill">
+    <mat-label>District*</mat-label>
+    <input matInput [(ngModel)]="currentInput.district">
+  </mat-form-field><br/>
+  <mat-form-field appearance="fill">
+    <mat-label>Place/Location*</mat-label>
+    <input matInput [matAutocomplete]="auto" (input)="filterLocations()" [(ngModel)]="currentInput.location">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="locationSelected($event)">
+      <mat-option *ngFor="let location of locationsObs | async" [value]="location">
+        <span>{{ location.address }}</span>
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field><br/>
+  <mat-form-field appearance="fill">
+    <mat-label>From time*</mat-label>
+    <input matInput type="datetime-local" [(ngModel)]="currentInput.startTime">
+  </mat-form-field><br/>
+  <mat-form-field appearance="fill">
+    <mat-label>Upto time (optional)</mat-label>
+    <input matInput type="datetime-local" [(ngModel)]="currentInput.endTime">
+  </mat-form-field><br/>
+  <p>Coordinates:</p>
+  <mat-form-field appearance="fill">
+    <mat-label>Latitude*</mat-label>
+    <input matInput type="number" [(ngModel)]="currentInput.latitude">
+  </mat-form-field><br/>
+  <mat-form-field appearance="fill">
+    <mat-label>Longitude*</mat-label>
+    <input matInput type="number" [(ngModel)]="currentInput.longitude">
+  </mat-form-field>
+  <br/>
+  <button mat-stroked-button (click)="saveCurrentInput()">Add Location</button>
+  <button mat-stroked-button (click)="clear()">Clear All</button><br/><br/>
+  <button mat-stroked-button (click)="submit()">Submit</button>
+</div>

@@ -1,0 +1,82 @@
+<div class="content" role="main">
+  <p class="info">Upload Google Maps location history JSON or enter details manually to start tracing.</p>
+  <div class="main-actions">
+    <label class="custom-file-upload" (click)="swap(1)">
+      <input type="file" id="myfile" (change)="upload($event)" />
+      UPLOAD JSON
+    </label>
+    <button mat-raised-button color="primary" (click)="swap(2)">Enter Details</button>
+  </div>
+  <span class="spacer"></span>
+  <p *ngIf="userLocationHistory && details=='uploaded'">File uploaded successfully!</p>
+  <section class="enter-details" *ngIf="details=='entered'">
+    <mat-form-field>
+      <mat-label>Place/Location*</mat-label>
+      <input matInput [(ngModel)]="user.place">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>From time*</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="user.startTime">
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Upto time (optional)</mat-label>
+      <input matInput type="datetime-local" [(ngModel)]="user.endTime">
+    </mat-form-field>
+  </section>
+  <span class="spacer"></span>
+  <button mat-raised-button color="accent" [disabled]=getErrors() (click)="trace()">TRACE ME</button>
+
+  <p>{{showMessage()}}</p>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="dataSource.data.length>0">
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="loc">
+      <th mat-header-cell *matHeaderCellDef>User Location</th>
+      <td mat-cell *matCellDef="let element"> {{element.loc}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="time">
+      <th mat-header-cell *matHeaderCellDef>User Time </th>
+      <td mat-cell *matCellDef="let element"> {{element.time}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ploc">
+      <th mat-header-cell *matHeaderCellDef>Patient Location</th>
+      <td mat-cell *matCellDef="let element"> {{element.ploc}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="ptime">
+      <th mat-header-cell *matHeaderCellDef>Patient Time</th>
+      <td mat-cell *matCellDef="let element"> {{element.ptime}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <span class="spacer"></span>
+  <button mat-raised-button color="warn" (click)="report()" *ngIf="dataSource.data.length>0">REPORT</button>
+
+</div>
+
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="default" type="ball-spin-clockwise">
+  <p style="color: white">Please Wait... </p>
+</ngx-spinner>
