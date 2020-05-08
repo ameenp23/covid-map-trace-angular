@@ -49,8 +49,7 @@ export class AddpatientFormComponent implements OnInit {
     let temp:any = null;
     if(this.currentInput.endTime==null) {
       temp = this.currentInput;
-      temp.DT = {};
-      temp.DT.seconds=new Date(this.currentInput.startTime).getTime()/1000;
+      temp.DT = 'DT';
     }
     this.patient.routeMap.push({
       ...this.currentInput
