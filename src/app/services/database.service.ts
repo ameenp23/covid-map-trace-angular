@@ -27,8 +27,8 @@ export class DatabaseService {
     return this.firestore.collection('patients').add(patientDetails)
       .then((ref) => {
         console.log(`Added patient with id=${ref.id}`)
-        for(let routeMapItem of patient.routeMap) {
-          this.firestore.collection('patients').doc(ref.id).collection('routeMap').add({
+        for(let routeMapItem of patient.routeMap as any) {
+          let newPatient:any = {
             district: routeMapItem.district,
             location: routeMapItem.location,
             geopoint: new firebase.firestore.GeoPoint(routeMapItem.latitude, routeMapItem.longitude),
@@ -38,7 +38,9 @@ export class DatabaseService {
               startt: firebase.firestore.Timestamp.fromDate(new Date(routeMapItem.startTime)),
               endt: firebase.firestore.Timestamp.fromDate(new Date(routeMapItem.endTime))
             }
-          })
+          };
+          if(routeMapItem.DT) newPatient.DT=firebase.firestore.Timestamp.fromDate(new Date(routeMapItem.startTime));
+          this.firestore.collection('patients').doc(ref.id).collection('routeMap').add(newPatient)
           .then((ref2) => {
             console.log(`Added a routeMapItem with id=${ref2.id} to the patient id=${ref.id}`);
             let db = firebase.firestore();
@@ -52,9 +54,12 @@ export class DatabaseService {
                   geopoint: new firebase.firestore.GeoPoint(routeMapItem.latitude, routeMapItem.longitude)
                 }).then((ref3) => {
                   console.log(`Added a new location with id=${ref3.id}`);
-                  this.firestore.collection('locations').doc(ref3.id).collection('patients').add({
-                    ref
-                  }).then(() => {
+                  let patientRef:any = {
+                    ref: ref,
+                    duration: newPatient.duration
+                  };
+                  if(newPatient.DT) patientRef.DT=newPatient.DT
+                  this.firestore.collection('locations').doc(ref3.id).collection('patients').add(patientRef).then(() => {
                     console.log("Added patientRef to the new location")
                   })
                   ref2.update({

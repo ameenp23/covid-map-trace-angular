@@ -12,7 +12,7 @@ export class AppService {
   constructor(private firestore: AngularFirestore) { }
 
   getLocations() {
-    return this.firestore.collectionGroup('locations').snapshotChanges().pipe(
+    return this.firestore.collectionGroup('routeMap').snapshotChanges().pipe(
       map(locations => locations.map(location => {
         const id = location.payload.doc.id;
         const data = location.payload.doc.data() as Location;

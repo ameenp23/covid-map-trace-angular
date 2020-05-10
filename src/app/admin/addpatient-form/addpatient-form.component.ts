@@ -46,6 +46,11 @@ export class AddpatientFormComponent implements OnInit {
 
   saveCurrentInput() {
     console.log(this.currentInput);
+    let temp:any = null;
+    if(this.currentInput.endTime==null) {
+      temp = this.currentInput;
+      temp.DT = 'DT';
+    }
     this.patient.routeMap.push({
       ...this.currentInput
     });
