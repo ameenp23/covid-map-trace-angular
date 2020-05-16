@@ -36,6 +36,8 @@ import { ContactComponent } from './contact/contact.component';
 import { SigninFormComponent } from './admin/signin-form/signin-form.component';
 import { AddpatientFormComponent } from './admin/addpatient-form/addpatient-form.component';
 
+import * as geolib from 'geolib';
+
 @NgModule({
   declarations: [
     AppComponent,
