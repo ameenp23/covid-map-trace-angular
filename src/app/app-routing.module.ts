@@ -5,11 +5,13 @@ import { HomeComponent } from './home/home.component';
 import { AdminComponent } from './admin/admin.component';
 import { PrivacyComponent } from './privacy/privacy.component';
 import { ContactComponent } from './contact/contact.component';
+import { MapComponent } from './map/map.component'
 
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full'},
   { path: 'home', component: HomeComponent},
+  { path: 'map', component: MapComponent},
   { path: 'trace', component: TraceComponent},
   { path: 'privacy', component: PrivacyComponent},
   { path: 'contact', component: ContactComponent},
