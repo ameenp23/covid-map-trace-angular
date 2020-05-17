@@ -5,6 +5,7 @@
   right: 0;
   bottom: 0;
   margin: 30px;
+  margin-top: 100px;
 }
 
 .map-frame {
@@ -14,4 +15,5 @@
 
 #map {
   height: 100%;
+  width: 100%;
 }

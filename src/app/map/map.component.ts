@@ -1,14 +1,14 @@
-import { AfterViewInit, Component } from '@angular/core';
-import * as L from 'leaflet';
-import 'leaflet.heat';
-import * as geolib from 'geolib';
-import { MapService } from '../services/map.service';
-import { Item, Patient } from '../interfaces/Item';
+import { AfterViewInit, Component } from "@angular/core";
+import * as L from "leaflet";
+import "leaflet.heat";
+import * as geolib from "geolib";
+import { MapService } from "../services/map.service";
+import { Item, Patient } from "../interfaces/Item";
 
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+  selector: "app-map",
+  templateUrl: "./map.component.html",
+  styleUrls: ["./map.component.scss"],
 })
 export class MapComponent implements AfterViewInit {
   private map;
@@ -21,9 +21,9 @@ export class MapComponent implements AfterViewInit {
   ngOnInit() {
     this.flag = false;
 
-    console.log('Ng On init Ran');
+    console.log("Ng On init Ran");
     this.mapService.getItems().subscribe((items) => {
-      console.log('items');
+      console.log("items");
       console.log(items);
       this.items = items;
 
@@ -62,20 +62,21 @@ export class MapComponent implements AfterViewInit {
     // if the data is int sexagecimal, we just need
     // to run the data convert it using the below
     // sexagesimalToDecimal function
-    var x1 = geolib.sexagesimalToDecimal(`9° 58' 37" N`);
-    var y1 = geolib.sexagesimalToDecimal(`76° 16' 38" E`);
+    var centerX1 = geolib.sexagesimalToDecimal(`9° 58' 37" N`);
+    var centerY1 = geolib.sexagesimalToDecimal(`76° 16' 38" E`);
 
     // this part creates the map using Leaflet
     // we can specifyt the default place the map centers in to
     // and the zoom level the map starts from.
-    this.map = L.map('map', {
-      center: [x1, y1], // Set Map Centered in Initialize Here
-      zoom: 19, // Set default Zoom in HERE
+    this.map = L.map("map", {
+      center: [centerX1, centerY1], // Set Map Centered in Initialize Here
+      zoom: 7, // Set default Zoom in HERE
     });
 
     // 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     const tiles = L.tileLayer(
-      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      "https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png",
+      // "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       {
         maxZoom: 19,
         attribution:
