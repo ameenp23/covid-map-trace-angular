@@ -46,6 +46,11 @@ export class DatabaseService {
             let db = firebase.firestore();
             let locRef = db.collection('locations');
             locRef.where('address', '==', routeMapItem.location).get().then(snapshot => {
+              let patientRef:any = {
+                ref: ref,
+                duration: newPatient.duration
+              };
+              if(newPatient.DT) patientRef.DT=newPatient.DT
               if (snapshot.empty) {
 
                 this.firestore.collection('locations').add({
@@ -54,11 +59,7 @@ export class DatabaseService {
                   geopoint: new firebase.firestore.GeoPoint(routeMapItem.latitude, routeMapItem.longitude)
                 }).then((ref3) => {
                   console.log(`Added a new location with id=${ref3.id}`);
-                  let patientRef:any = {
-                    ref: ref,
-                    duration: newPatient.duration
-                  };
-                  if(newPatient.DT) patientRef.DT=newPatient.DT
+                  
                   this.firestore.collection('locations').doc(ref3.id).collection('patients').add(patientRef).then(() => {
                     console.log("Added patientRef to the new location")
                   })
@@ -78,7 +79,7 @@ export class DatabaseService {
                   }).then(() => {
                     console.log("updated locRef in patient with existing location")
                   })
-                  db.collection('locations').doc(doc.id).collection('patients').add({ref}).then(() => {
+                  db.collection('locations').doc(doc.id).collection('patients').add(patientRef).then(() => {
                     console.log("Added patientRef to the existing location")
                   })
                 })
