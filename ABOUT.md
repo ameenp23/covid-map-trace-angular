@@ -11,7 +11,7 @@ The core algorithm of tracing runs on the client side browser, therefor the user
 virus spread, then it might not get to the point where the database is too large. Which means we can prevent a pandemic to occur in the first place!!!
 
 #### Plus
-It also has a map which shows hotspot areas. Compared to the hotspot areas in google map which just shows the containment zones, this one is more accurately made from patient route maps.
+It also has a [map](https://covid-map-trace-test.web.app/map) which shows hotspot areas. Compared to the hotspot areas in google map which just shows the containment zones, this one is more accurately made from patient route maps.
 
 [Test site](https://covid-map-trace-test.web.app/home)  (updated with map feature)
 [Main site](https://covid-map-trace.web.app/home) (map unavailable)
