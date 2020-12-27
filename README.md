@@ -1,27 +1,17 @@
-# CovidMapTraceAngular
+# Covid Map Trace
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.7.
+This is an application to compare users location history with the virus infected patient's route map. The user can report themselves through the app, if they find themselves to be in the vicinity of some patient at particular point of time in the past.
+It also has an admin page for health workers/volunteers where they can login with their credentials to update patient route maps regularly.The app doesn't require personal details of patient or the user.
 
-## Development server
+### Why 
+We developed this with the goal in mind to trace the spread of virus without invading the privacy of regular users. We believe every individual is a responsible citizens and will take necessary actions to keep themselves and their loved once safe.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### How
+The core algorithm of tracing runs on the client side browser, therefor the user location history never leaves the device. But the drawback being as the patient database get's bigger the tracing will take time. But we expect this application to be used during the early stages of a
+virus spread, then it might not get to the point where the database is too large. Which means we can prevent a pandemic to occur in the first place!!!
 
-## Code scaffolding
+#### Plus
+It also has a [map](https://covid-map-trace-test.web.app/map) which shows hotspot areas. Compared to the hotspot areas in google map which just shows the containment zones, this one is more accurately made from patient route maps.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+[Test site](https://covid-map-trace-test.web.app/home)  (updated with map feature)
+[Main site](https://covid-map-trace.web.app/home) (map unavailable)
